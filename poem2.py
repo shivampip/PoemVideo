@@ -123,10 +123,12 @@ total_time= 0
 poem= poem.split("\n")
 poem.remove("")
 
+spk= speaker.Speaker()
+spk.setLang('en')
 os.mkdir(user+"/temp")
 for i in range(len(poem)):
     if(len(poem[i])>2):
-        file= speaker.convert(poem[i], user+"/temp/"+str(i))
+        file= spk.save(poem[i], user+"/temp/"+str(i))
         print(file)
 
 print("Conversion done")

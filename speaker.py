@@ -2,18 +2,33 @@ import os
 import sys
 from gtts import gTTS
 
-def convert(poem, outname):
-    print("Please wait")
-    tts= gTTS(text= poem, lang= 'en')
-    tts.save(outname+'.mp3')
-    print("Done")
-    return outname+'.mp3'
+class Speaker:
+    
+    def __init__(self):
+        self.lang= 'en'
+        
+    def setLang(self, lang):
+        self.lang= lang
+        
+    def save(self, text, outname):
+        print("Please wait")
+        self.tts= gTTS(text= text, lang= self.lang)
+        self.tts.save(outname+'.mp3')
+        print("Done")
+        self.outname= outname+'.mp3'
+        return outname+'.mp3'
 
-def play(filename):
-    filename= filename.replace('/','\\')
-    print("Playing ",filename)
-    os.system(filename)
+    def play(self):
+        filename= self.outname.replace('/','\\')
+        print("Playing ",filename)
+        os.system(filename)
+    
 
+    
+if __name__=='__main__':
+    spk= Speaker()
+    spk.save("Hello Shivam", "hello")
+    spk.play()
 
 
 
