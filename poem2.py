@@ -126,13 +126,13 @@ poem.remove("")
 spk= speaker.Speaker()
 spk.setLang('en')
 os.mkdir(user+"/temp")
-for i in range(len(poem)):
-    if(len(poem[i])>2):
-        file= spk.save(poem[i], user+"/temp/"+str(i))
-        print(file)
-
-print("Conversion done")
-quit()
+#for i in range(len(poem)):
+#    if(len(poem[i])>2):
+#        file= spk.save(poem[i], user+"/temp/"+str(i))
+#        print(file)
+#
+#print("Conversion done")
+#quit()
 
 #====================================================
 
@@ -155,6 +155,7 @@ def getTitle(text, duration):
 
 text_clips.insert(0, getTitle(title, title_duration))
 
+i=0
 for line in poem:
 	if(len(line)<5):
 		continue
@@ -163,6 +164,9 @@ for line in poem:
 	line= processLine(line)
 	text_clips.append(getClip(line, t))
 	total_time+=t
+    
+    spk.save(line, user+"/temp/"+str(i))
+    i+=1
 
 
 
