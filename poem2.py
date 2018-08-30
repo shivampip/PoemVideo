@@ -126,6 +126,7 @@ poem.remove("")
 spk= speaker.Speaker()
 spk.setLang('en')
 os.mkdir(user+"/temp")
+poem_aud_files=[]
 #for i in range(len(poem)):
 #    if(len(poem[i])>2):
 #        file= spk.save(poem[i], user+"/temp/"+str(i))
@@ -156,6 +157,7 @@ def getTitle(text, duration):
 text_clips.insert(0, getTitle(title, title_duration))
 
 i=0
+poem_aud= []
 for line in poem:
 	if(len(line)<5):
 		continue
@@ -163,12 +165,13 @@ for line in poem:
 	times.append(t)
 	line= processLine(line)
 	text_clips.append(getClip(line, t))
-	total_time+=t
     
     spk.save(line, user+"/temp/"+str(i))
+    audioclip= AudioFileClip(user+"/temp/"+str(i)).set_start(total_time)
+    poem_aud.append(audioclip)
+    
+	total_time+=t
     i+=1
-
-
 
 
 
@@ -231,8 +234,11 @@ total_time+=written_duration+ editor_duration
 
 
 #=======================================================
-audioclip = AudioFileClip(audio_file).subclip(audio_offset,total_time+audio_offset)
+songclip = AudioFileClip(audio_file).subclip(audio_offset,total_time+audio_offset)
 #=======================================================
+
+poem_aud.append(songclip)
+audioclip= CompositeAudioClip(poem_aud)
 
 result= result.set_audio(audioclip)
 result.write_videofile(output_file, fps= 24)
