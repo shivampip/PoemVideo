@@ -1,4 +1,5 @@
 from moviepy.editor import *
+from moviepy.decorators import audio_video_fx
 import pre
 import glob
 import speaker
@@ -70,7 +71,7 @@ audio_offset= 0
 #=======Output====================================
 
 out_res_height= 1280
-output_file= "TheTiger.mp4"
+output_file= "TheRoadNotTaken.mp4"
 
 #=================================================
 #=======Credits===================================
@@ -156,7 +157,10 @@ def getClip(text, duration):
 
 def getTitle(text, duration):
 	return TextClip(text, font= font_title, fontsize= fontsize_title, color='white').set_position('center').set_duration(duration)
-	
+
+
+def volumex(clip, factor):
+	return clip.fl(lambda gf, t: factor * gf(t),keep_duration = True)	
 
 
 text_clips.insert(0, getTitle(title, title_duration))
@@ -170,9 +174,9 @@ for line in poem:
 	times.append(t)
 	line= processLine(line)
 	text_clips.append(getClip(line, t))
-	spk.save(line, user+"/temp/"+str(i))
-	audioclip= AudioFileClip(user+"/temp/"+str(i)).set_start(total_time)
-	poem_aud.append(audioclip)
+	#spk.save(line, user+"/temp/"+str(i))
+	audioclip= AudioFileClip(user+"/temp/"+str(i)+'.mp3').set_start(title_duration+total_time)
+	poem_aud.append(volumex(audioclip, 3.0))
 	
 	total_time+=t
 	i+=1
@@ -240,9 +244,12 @@ total_time+=written_duration+ editor_duration
 #=======================================================
 songclip = AudioFileClip(audio_file).subclip(audio_offset,total_time+audio_offset)
 #=======================================================
-
+songclip= volumex(songclip, 0.3)
 poem_aud.append(songclip)
 audioclip= CompositeAudioClip(poem_aud)
+
+#audioclip= volumex(audioclip, 0.5).fx( vfx.audio_fadeout, 4.0)
+audioclip= audioclip.volumex(0.5)
 
 result= result.set_audio(audioclip)
 result.write_videofile(output_file, fps= 24)
