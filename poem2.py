@@ -125,7 +125,12 @@ poem.remove("")
 
 spk= speaker.Speaker()
 spk.setLang('en')
-os.mkdir(user+"/temp")
+
+try:
+    os.mkdir(user+"/temp")
+except Exception as e:
+    print("File already exists")
+    
 poem_aud_files=[]
 #for i in range(len(poem)):
 #    if(len(poem[i])>2):
@@ -165,13 +170,12 @@ for line in poem:
 	times.append(t)
 	line= processLine(line)
 	text_clips.append(getClip(line, t))
-    
-    spk.save(line, user+"/temp/"+str(i))
-    audioclip= AudioFileClip(user+"/temp/"+str(i)).set_start(total_time)
-    poem_aud.append(audioclip)
-    
+	spk.save(line, user+"/temp/"+str(i))
+	audioclip= AudioFileClip(user+"/temp/"+str(i)).set_start(total_time)
+	poem_aud.append(audioclip)
+	
 	total_time+=t
-    i+=1
+	i+=1
 
 
 
